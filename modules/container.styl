@@ -1,0 +1,94 @@
+
+container(max-container-width = 960px, min-margin = 32px, max-content-width = 800px, min-padding = 10px, outer-alignment = center, inner-alignment = center){
+    container-widths(max-container-width = 1080px, max-content-width = 960px, outer-alignment = center, inner-alignment = center){
+        if (max-container-width != none){
+            max-width: max-container-width;
+            if (outer-alignment == center){
+                container-margin(auto);
+            }
+            else if (outer-alignment == left){
+                margin-left: min-margin;
+                margin-right: auto;
+            }
+            else{
+                margin-left: auto;
+            }
+            if (max-content-width != none){
+                if (inner-alignment == center){
+                    container-padding(max-container-width/2 - max-content-width/2);
+                }
+                else if (inner-alignment == left){
+                    padding-right: 'calc(100vw - %s)' % (max-content-width + 2*min-margin + min-padding); 
+                    padding-left: min-padding;
+                }
+                else{
+                    padding-left: 'calc(100vw - %s)' % (max-content-width + 2*min-margin + min-padding); 
+                    padding-right: min-padding;       
+                }
+            }    
+        }
+        else if(max-content-width != none){
+            container-padding('calc(50vw - %s)' % (max-content-width / 2 + min-margin));
+        }
+        if (max-content-width  == none){
+            container-padding(min-padding);
+        }
+    }
+    container-margin(margin){
+        margin-left: margin;
+        margin-right: margin;    
+    }
+    container-padding(padding){
+        padding-left: padding;
+        padding-right: padding;
+    }
+
+  width: auto;
+  if (max-container-width != none) {
+    max-width: max-container-width;    
+  }
+  container-margin(min-margin);
+  container-padding(min-padding);
+  
+  if(max-content-width != none){
+    @media screen and (min-width: max-content-width + (min-padding*2) + (min-margin*2)){
+            if (inner-alignment == center){
+                container-padding('calc(50vw - %s)' % (max-content-width / 2 + min-margin));
+            }
+            else if (inner-alignment == left){
+                padding-right: 'calc(100vw - %s)' % (max-content-width + 2 * min-margin + min-padding);
+            }
+            else{
+                padding-left: 'calc(100vw - %s)' % (max-content-width + 2 * min-margin + min-padding);     
+            }
+        }    
+  
+    if (max-container-width != none){
+        @media screen and (min-width: max-container-width + (min-margin*2)){
+                if (inner-alignment == center){
+                    container-padding(max-container-width / 2 - max-content-width / 2);
+                }   
+                else if (inner-alignment == left){
+                    padding-right: max-container-width - max-content-width - min-padding;              
+                }
+                else{
+                    padding-left: max-container-width - max-content-width - min-padding;
+                    
+                }
+        }
+    }
+  }
+  if (max-container-width != none){
+        @media screen and (min-width: max-container-width + (min-margin*2)){
+                if (outer-alignment == center or outer-alignment == left){
+                    margin-right: auto;
+                    
+                }
+                if (outer-alignment == center or outer-alignment == right){
+                    margin-left: auto;          
+                }
+        }
+  }
+    
+  {block}
+}
