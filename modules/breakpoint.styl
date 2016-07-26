@@ -1,23 +1,20 @@
 /// Media Queries
 //===============================================
 
+breakpoints = {
+	mobile-max : 		settings.breakpoints.mobile,
+	phablet-max : 		settings.breakpoints.phablet,
+	tablet-max : 		settings.breakpoints.tablet,
+	desktop-sml-max :	settings.breakpoints.desktop-sml,
+	desktop-mid-max :	settings.breakpoints.desktop-mid,
+	phablet-min : 		settings.breakpoints.mobile + 1,
+	tablet-min : 		settings.breakpoints.phablet + 1,
+	desktop-sml-min : 	settings.breakpoints.tablet + 1,
+	desktop-mid-min : 	settings.breakpoints.desktop-sml + 1,
+	desktop-lrg-min : 	settings.breakpoints.desktop-mid + 1
+}
 
-// Viewport Settings
-//---------------------------------------------
-
-mobile-max = 		479px;
-phablet-max = 		767px;
-tablet-max = 		1023px;
-desktop-sml-max =	1199px;
-desktop-mid-max =	1799px;
-
-phablet-min = 		mobile-max + 1;
-tablet-min = 		phablet-max + 1;
-desktop-sml-min = 	tablet-max + 1;
-desktop-mid-min = 	desktop-sml-max + 1;
-desktop-lrg-min = 	desktop-mid-max + 1;
-
-createBreakpoint(fromThisSize = "", uptoThisSize = ""){
+createMediaQuery(fromThisSize = "", uptoThisSize = ""){
 	query = "";
 	if (fromThisSize != "" or uptoThisSize != "") {
 		if (fromThisSize != "" and fromThisSize != 0)  {
@@ -33,29 +30,25 @@ createBreakpoint(fromThisSize = "", uptoThisSize = ""){
 	}
 }
 
-// Media Queries
-//---------------------------------------------
+mediaqueries = {
+	mobile : 			createMediaQuery(0, breakpoints.mobile-max),
+	phablet : 			createMediaQuery(breakpoints.phablet-min, breakpoints.phablet-max),
+	from-phablet : 		createMediaQuery(breakpoints.phablet-min),
+	to-phablet : 		createMediaQuery(0,breakpoints.phablet-max),	
+	tablet : 			createMediaQuery(breakpoints.tablet-min, breakpoints.tablet-max),
+	to-tablet : 		createMediaQuery(0,breakpoints.tablet-max),
+	from-tablet : 		createMediaQuery(breakpoints.tablet-min),
+	desktop-sml : 		createMediaQuery(breakpoints.desktop-sml-min, breakpoints.desktop-sml-max),
+	desktop : 			createMediaQuery(breakpoints.desktop-sml-min),
+	from-desktop : 		createMediaQuery(breakpoints.desktop-sml-min),
+	from-desktop-sml : 	createMediaQuery(breakpoints.desktop-sml-min),
+	to-desktop-sml : 	createMediaQuery(0,breakpoints.desktop-sml-max),	
+	desktop-mid : 		createMediaQuery(breakpoints.desktop-mid-min, breakpoints.desktop-mid-max),
+	from-desktop-mid : 	createMediaQuery(breakpoints.desktop-mid-min),
+	desktop-lrg : 		createMediaQuery(breakpoints.desktop-lrg-min),
+	from-desktop-lrg : 	createMediaQuery(breakpoints.desktop-lrg-min)
+}
 
-// Map of set breakpoints
-breakpoints_array ( b ) {
-	if(b == "mobile") 					{ return createBreakpoint(0, mobile-max)}
-	else if(b == "phablet")  			{ return createBreakpoint(phablet-min, phablet-max)}
-	else if(b == "from-phablet")  		{ return createBreakpoint(phablet-min)}
-	else if(b == "to-phablet")  		{ return createBreakpoint(0,phablet-max)}	
-	else if(b == "tablet")  			{ return createBreakpoint(tablet-min, tablet-max)}
-	else if(b == "to-tablet")  			{ return createBreakpoint(0,tablet-max)}
-	else if(b == "from-tablet")  		{ return createBreakpoint(tablet-min)}
-	else if(b == "desktop-sml")  		{ return createBreakpoint(desktop-sml-min, desktop-sml-max)}
-	else if(b == "desktop")  			{ return createBreakpoint(desktop-sml-min)}
-	else if(b == "from-desktop")  		{ return createBreakpoint(desktop-sml-min)}
-	else if(b == "from-desktop-sml")  	{ return createBreakpoint(desktop-sml-min)}
-	else if(b == "to-desktop-sml")  	{ return createBreakpoint(0,desktop-sml-max)}	
-	else if(b == "desktop-mid")  		{ return createBreakpoint(desktop-mid-min, desktop-mid-max)}
-	else if(b == "from-desktop-mid")  	{ return createBreakpoint(desktop-mid-min)}
-	else if(b == "desktop-lrg")  		{ return createBreakpoint(desktop-lrg-min)}
-	else if(b == "from-desktop-lrg")  	{ return createBreakpoint(desktop-lrg-min)}
-	else{ return null }
-};
 
 breakpoint(breakpoint = "", resolution = "", media-type = "", media-feature = "") {
 	if (breakpoint != "" or resolution != "" or media-feature != "" or media-type) {
@@ -64,8 +57,8 @@ breakpoint(breakpoint = "", resolution = "", media-type = "", media-feature = ""
 
 		// Add breakpoint to media string
 		if (breakpoint != "") {
-			if (breakpoints_array(breakpoint) != null) {
-				media += breakpoints_array(breakpoint);
+			if (mediaqueries[breakpoint] != null) {
+				media += mediaqueries[breakpoint];
 			}
 		}
 
@@ -97,7 +90,7 @@ breakpoint(breakpoint = "", resolution = "", media-type = "", media-feature = ""
 			media += "all and (" + media-feature + ")";
 		}
 
-		@media {media} {
+		@media media {
 			{block}
 		}
 	}
