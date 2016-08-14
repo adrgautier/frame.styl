@@ -1,0 +1,185 @@
+/// Columns
+//===============================================
+
+columns(horizontal-properties, vertical-properties = stretch, target = "*", margin-properties = none, padding-properties = none, width-properties = none, order = none){
+    nth = "nth-child"
+    if(target != "*"){
+        nth = "nth-of-type";
+    }
+    
+
+    if(stretch in vertical-properties){
+        //clearfix
+    }
+
+    col-number = numIn(horizontal-properties);
+    cycle = 0;
+
+    //understanding cycle
+    if(width-properties != none){
+        total-width = 0;
+        for width in width-properties{
+            total-width += width;
+            if(total-width <= col-number){
+                cycle+=1;
+            }
+            else{
+                error("Total width greater than columns number !")
+            }
+        }
+    }
+    else{
+        cycle = col-number;
+        for i in (1..cycle){
+            width-properties[(i - 1)] = 1;
+        }
+    }
+
+    //understanding order
+    if(order == none || order == normal){
+        for i in (1..cycle){
+            order[(i - 1)] = i;
+        }
+    }
+
+    &>{target}{
+        position: relative;
+        if(right in horizontal-properties){
+            float: right;
+            order = reverse(order);
+        }
+        else{
+            float: left;
+        }
+        
+        //margin
+        if(margin-properties != none){
+            base-margin = numIn(margin-properties)
+            if(space-around in margin-properties){
+                total-margin = base-margin*2*cycle;
+                margin-left: base-margin;
+                margin-right: base-margin;
+                local-margin = (2*base-margin);
+            }
+            else if(space-between in margin-properties){
+                total-margin = base-margin*(cycle - 1);
+            }
+            else if(equal in margin-properties){
+                total-margin = base-margin*(cycle + 1);
+            }
+        }
+
+        //applying cycle
+        for i in (1..cycle) {
+            &:{nth}({cycle}n+{i}){
+                
+                bindex = (index(order,i) + 1);
+            
+                //margin
+                if(margin-properties != none && !(space-around in margin-properties)){
+                    if(bindex == 1){
+                        if(equal in margin-properties){
+                            margin-left: base-margin;
+                            local-margin = ((3*base-margin)/2);
+                        }
+                        else{
+                            local-margin = (base-margin/2);
+                        }
+                        margin-right: (base-margin/2);
+                        
+                    }
+                    else if(bindex == cycle){
+                        if(equal in margin-properties){
+                            margin-right: base-margin;
+                            local-margin = ((3*base-margin)/2);
+                        }
+                        else{
+                            local-margin = (base-margin/2);
+                        }
+                        margin-left: (base-margin/2);
+                    }
+                    else{
+                        margin-left: (base-margin/2);
+                        margin-right: (base-margin/2);
+                        local-margin = base-margin;
+                    }
+                }
+
+                //padding
+
+                //getting original offset
+                original-offset-px = 0;
+                original-offset-weight = 0;
+
+                if(i>=1){
+                    for g in (1..i) {
+                    gindex = index(order,g);
+                    original-offset-weight += width-properties[gindex];
+                    //compute px offset from margin properties
+                    }
+                }
+                
+                //getting final offset
+                final-offset-px = 0;
+                final-offset-weight = 0;
+
+                if(bindex>=1){
+                    for f in (1..bindex) {
+                        final-offset-weight += width-properties[(f - 1)];
+                        //compute px offset from margin properties
+                        //margin
+                        if(margin-properties != none){
+                            if(f == 1){
+                                if(equal in margin-properties){
+                                    final-offset-px += base-margin;
+                                }
+                                final-offset-px += (base-margin/2);
+                            }
+                            else if(f == cycle){
+                                if(equal in margin-properties){
+                                    final-offset-px += base-margin;
+                                }
+                                final-offset-px += (base-margin/2);
+                            }
+                            else{
+                                final-offset-px += (base-margin/2);
+                                final-offset-px += (base-margin/2);
+                            }
+                        }
+                    }
+                }
+                if(right in horizontal-properties){
+                    right : (final-offset-weight - original-offset-weight)*(100/col-number)%;
+                }
+                else{
+                    left : (final-offset-weight - original-offset-weight)*(100/col-number)%;
+                }
+                
+                final-width-pourcent = (width-properties[(i - 1)]*(100/col-number))%;
+                final-width-px = (total-margin/cycle)px;
+
+                width : "calc(%s - %s)" % (final-width-pourcent final-width-px);
+            }
+
+        }
+        {block}
+    }
+}
+
+//alias
+col(properties){
+    if(length(properties) == 1){
+        +columns(propeties, stretch, "*", 16px space-around, 16px space-around){
+            {block}
+        }
+    }
+    else{
+        col-number = 0;
+        for column in properties{
+            col-number += column;
+        }
+        +columns(col-number, stretch, "*", 16px space-around, 16px space-around, properties){
+            {block}
+        }
+    }
+}

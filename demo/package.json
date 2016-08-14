@@ -1,0 +1,17 @@
+{
+  "name": "frame.styl(demo)",
+  "version": "0.0.1",
+  "description": "Demonstrate the framework capabilities",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "browser-sync": "^2.12.5",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.1"
+  },
+  "devDependencies": {
+    "gulp-plumber": "^1.1.0",
+    "gulp-stylus": "^2.3.1"
+  },
+  "author": "Adrien Gautier",
+  "license": ""
+}

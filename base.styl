@@ -1,3 +1,47 @@
 @import "modules/settings"
 @import "modules/breakpoint";
 @import "modules/container";
+@import "modules/columns"
+@import "modules/boxes"
+
+vertical-margin(size = 20px, template=space-around){
+    if(template in (space-around equal)){
+        margin-left: size;
+        margin-right: size;
+    }
+    if(template in (space-between equal)){
+        if(target == "*"){
+            &:not(:first-child){
+                margin-left: (size/2);
+            }
+            &:not(:last-child){
+                margin-right: (size/2);
+            }
+        }
+        else{
+            &:not(:first-of-type){
+                margin-left: (size/2);
+            }
+            &:not(:last-of-type){
+                margin-right: (size/2);
+            }
+        }
+    }
+}
+
+numIn(input){
+    output = null;
+    for elem in input{
+        if(typeof(elem) == "unit"){
+            output = elem;
+        }
+    }
+    return output
+}
+
+reverse(list){
+    reversed = ()
+    unshift(reversed, value) for value in list
+
+    return reversed
+}

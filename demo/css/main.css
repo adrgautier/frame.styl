@@ -1,0 +1,91 @@
+html {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html * {
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+body {
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Source Sans Pro', sans-serif;
+  overflow-y: scroll;
+}
+h1 {
+  font-size: 2em;
+}
+main {
+  position: relative;
+  display: block;
+  background-color: #eee;
+  width: auto;
+  max-width: 960px;
+  margin-left: 32px;
+  margin-right: 32px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+@media screen and (min-width: 1024px) {
+  main {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+#boxes [class*=demo] {
+  height: 100px;
+}
+#boxes .demo1 {
+  background-color: #fff;
+  display: flex;
+  flex-wrap: nowrap;
+}
+#boxes .demo1>div {
+  flex-basis: 100px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  border: 1px solid #000;
+  background-color: #4b91b9;
+  text-align: center;
+  margin-left: 45px;
+  margin-right: 45px;
+}
+#boxes .demo1>div:not(:first-of-type) {
+  margin-left: 22.5px;
+}
+#boxes .demo1>div:not(:last-of-type) {
+  margin-right: 22.5px;
+}
+#columns [class*=demo] {
+  height: 100px;
+}
+#columns .demo1 {
+  background-color: #fff;
+}
+#columns .demo1>* {
+  position: relative;
+  float: left;
+  background-color: #4b91b9;
+}
+#columns .demo1>*:nth-child(3n+1) {
+  margin-left: 12px;
+  margin-right: 6px;
+  left: 0%;
+  width: calc(16.666666666666668% - 16px);
+}
+#columns .demo1>*:nth-child(3n+2) {
+  margin-left: 6px;
+  margin-right: 6px;
+  left: 0%;
+  width: calc(50% - 16px);
+}
+#columns .demo1>*:nth-child(3n+3) {
+  margin-right: 12px;
+  margin-left: 6px;
+  left: 0%;
+  width: calc(33.333333333333336% - 16px);
+}

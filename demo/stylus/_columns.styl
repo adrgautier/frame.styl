@@ -1,0 +1,12 @@
+#columns{
+    [class*=demo]{
+        height: 100px;
+    }
+
+    .demo1{
+        background-color: white;
+        +columns(6 ,,,12px equal,,(1 3 2),){
+            background-color blue
+        }
+    }
+}
