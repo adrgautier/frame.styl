@@ -2,31 +2,14 @@
 //===============================================
 
 columns(horizontal-properties, target = "*", margin-properties = none, padding-properties = none, width-properties = none, order = none){
-    nth = "nth-child"
-    if(target != "*"){
-        nth = "nth-of-type";
-    }
     
+    /// DEFINITIONS
 
-
-    //clearfix
-    &:after, &:before {
-        content: "";
-		display: block;
-        line-height: 0;
-	}
-    &:after {
-        clear: both;
-    }
-
+    //defining columns number
     col-number = numIn(horizontal-properties);
+
+    //defining cycle
     cycle = 0;
-
-    //getting original offset
-
-
-
-    //understanding cycle
     if(width-properties != none){
         total-width = 0;
         for width in width-properties{
@@ -46,28 +29,17 @@ columns(horizontal-properties, target = "*", margin-properties = none, padding-p
         }
     }
 
-    //understanding order
-    if(order == none || order == normal){
-        for i in (1..cycle){
-            order[(i - 1)] = i;
-        }
+    //defining nth mode
+    nth = "nth-child"
+    if(target != "*"){
+        nth = "nth-of-type";
     }
 
-    if(right in horizontal-properties || reverse in horizontal-properties){
-        order = reverse(order);
-    }
-
-    &>{target}{
-        position: relative;
-        float: left;
-        
-        //margin
+    //defining total margin
         if(margin-properties != none){
-            base-margin = numIn(margin-properties)
+            base-margin = numIn(margin-properties);
             if(space-around in margin-properties){
                 total-margin = base-margin*2*cycle;
-                margin-left: base-margin;
-                margin-right: base-margin;
             }
             else if(space-between in margin-properties){
                 total-margin = base-margin*(cycle - 1);
@@ -75,113 +47,101 @@ columns(horizontal-properties, target = "*", margin-properties = none, padding-p
             else if(equal in margin-properties){
                 total-margin = base-margin*(cycle + 1);
             }
+            else{
+                total-margin = base-margin*cycle;
+            }
         }
 
+
+    //defining order
+    if(order == none || order == normal){
+        for i in (1..cycle){
+            order[(i - 1)] = i;
+        }
+    }
+    if(right in horizontal-properties || reverse in horizontal-properties){
+        order = reverse(order);
+    }
+
+    /// CALCULATIONS
+
+    &>{target}{
+
+        position: relative;
+        float: left;
+
+        //setting original offset
         original-offset-px = 0;
         original-offset-weight = 0;
+
         //applying cycle
         for i in (1..cycle) {
-            bindex = (index(order,i) + 1);
+            final-index = (index(order,i) + 1);
             &:{nth}({cycle}n+{i}){
-                if(bindex == 1){
+                if(final-index == 1){
                     clear: left;
                 }
             
                 //margin
-                if(margin-properties != none && !(space-around in margin-properties)){
-                    if(bindex == 1){
-                        if(equal in margin-properties){
-                            margin-left: base-margin;
-                        }
-                        margin-right: (base-margin/2);
-                        
-                    }
-                    else if(bindex == cycle){
-                        if(equal in margin-properties){
-                            margin-right: base-margin;
-                        }
-                        margin-left: (base-margin/2);
-                    }
-                    else{
-                        margin-left: (base-margin/2);
-                        margin-right: (base-margin/2);
-                    }
+                if(margin-properties != none){
+                    column-margin(margin-properties,final-index); 
                 }
 
                 //padding
-
-                
-
-                
+                if(padding-properties != none){
+                   column-padding(padding-properties,final-index);              
+                }
                 
                 //getting final offset
                 final-offset-px = 0;
                 final-offset-weight = 0;
 
-                if(bindex>1){
-                    for f in (1..(bindex - 1)) {
+                if(final-index>1){
+                    for f in (1..(final-index - 1)) {
                         
                         final-offset-weight += width-properties[(f - 1)];
-                        //compute px offset from margin properties
-                        //margin
+                        
+
                         if(margin-properties != none){
-                            if(!(space-around in margin-properties) && (f == 1 || f == cycle) ){
-                                if(equal in margin-properties){
-                                    final-offset-px += base-margin;
-                                }
-                                final-offset-px += (base-margin/2);
-                            }
-                            else{
-                                if(space-around in margin-properties){
-                                    final-offset-px += 2*base-margin;
-                                }
-                                else{
-                                    final-offset-px += base-margin;
-                                }
-                            }
+                            final-offset-px += local-margin(margin-properties,f);    
+                            final-offset-px -= (total-margin/cycle);
                         }
-                        final-offset-px -= (total-margin/cycle);
                     }
                 }
 
                 left : "calc(%s + %s)" % (((final-offset-weight - original-offset-weight)*(100/col-number))% (final-offset-px - original-offset-px)px);
-                
-                final-width-pourcent = (width-properties[(bindex - 1)]*(100/col-number))%;
-                final-width-px = (total-margin/cycle)px;
-
-                width : "calc(%s - %s)" % (final-width-pourcent final-width-px);
-            
+                width : "calc(%s - %s)" % ((width-properties[(final-index - 1)]*(100/col-number))% (total-margin/cycle)px);
 
             }
-            original-offset-weight += width-properties[(bindex - 1)];
+
+            //incrementing original offset
+            original-offset-weight += width-properties[(final-index - 1)];
 
             if(margin-properties != none){
-                if(!(space-around in margin-properties) && (bindex == 1 || bindex == cycle) ){
-                    if(equal in margin-properties){
-                        original-offset-px += base-margin;
-                    }
-                    original-offset-px += (base-margin/2);
-                }
-                else{
-                    if(space-around in margin-properties){
-                        original-offset-px += 2*base-margin;
-                    }
-                    else{
-                        original-offset-px += base-margin;
-                    }
-                }
+                original-offset-px += local-margin(margin-properties,final-index);
                 original-offset-px -= (total-margin/cycle);
             }
 
         }
+
         {block}
+    }
+
+    //clearfix
+    &:after, &:before {
+        content: "";
+        display: block;
+        line-height: 0;
+    }
+    &:after {
+        clear: both;
     }
 }
 
 //alias
 col(properties){
     if(length(properties) == 1){
-        +columns(propeties, stretch, "*", 16px space-around, 16px space-around){
+        +columns(properties, "*", 16px space-around, 16px space-around){
             {block}
         }
     }
@@ -190,7 +150,7 @@ col(properties){
         for column in properties{
             col-number += column;
         }
-        +columns(col-number, stretch, "*", 16px space-around, 16px space-around, properties){
+        +columns(col-number, "*", 16px space-around, 16px space-around, properties){
             {block}
         }
     }

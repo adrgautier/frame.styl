@@ -51,17 +51,39 @@ main {
   border: 1px solid #000;
   background-color: #4b91b9;
   text-align: center;
-  margin-left: 45px;
-  margin-right: 45px;
-}
-#boxes .demo1>div:not(:first-of-type) {
-  margin-left: 22.5px;
-}
-#boxes .demo1>div:not(:last-of-type) {
-  margin-right: 22.5px;
 }
 #columns .demo1 {
   background-color: #fff;
+}
+#columns .demo1>* {
+  position: relative;
+  float: left;
+  background-color: #4b91b9;
+}
+#columns .demo1>*:nth-child(3n+1) {
+  clear: left;
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  left: calc(0% + 0px);
+  width: calc(33.333333333333336% - 32px);
+}
+#columns .demo1>*:nth-child(3n+2) {
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  left: calc(0% + 0px);
+  width: calc(16.666666666666668% - 32px);
+}
+#columns .demo1>*:nth-child(3n+3) {
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  left: calc(0% + 0px);
+  width: calc(50% - 32px);
 }
 #columns .demo1:after,
 #columns .demo1:before {
@@ -71,28 +93,4 @@ main {
 }
 #columns .demo1:after {
   clear: both;
-}
-#columns .demo1>* {
-  position: relative;
-  float: left;
-  background-color: #4b91b9;
-}
-#columns .demo1>*:nth-child(3n+1) {
-  clear: left;
-  margin-left: 12px;
-  margin-right: 6px;
-  left: calc(0% + 0px);
-  width: calc(16.666666666666668% - 16px);
-}
-#columns .demo1>*:nth-child(3n+2) {
-  margin-left: 6px;
-  margin-right: 6px;
-  left: calc(0% + 0px);
-  width: calc(33.333333333333336% - 16px);
-}
-#columns .demo1>*:nth-child(3n+3) {
-  margin-right: 12px;
-  margin-left: 6px;
-  left: calc(0% + 0px);
-  width: calc(50% - 16px);
 }
