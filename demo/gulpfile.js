@@ -12,16 +12,16 @@ gulp.task('serve', ['stylus'], function() {
         server: "./"
     });
 
-    gulp.watch(["stylus/**/*.styl","../**/*.styl"], ['stylus']);    
+    gulp.watch(["assets/stylus/**/*.styl","../**/*.styl"], ['stylus']);    
     gulp.watch("*.html").on('change', browserSync.reload);
 });
 
 // Compile stylus files into CSS & auto-inject into browsers
 gulp.task('stylus', function() {
-    return gulp.src("stylus/main.styl")
+    return gulp.src("assets/stylus/main.styl")
         .pipe(plumber())
         .pipe(stylus())
-        .pipe(gulp.dest("css"))
+        .pipe(gulp.dest("assets/css"))
         .pipe(browserSync.stream());
 });
 

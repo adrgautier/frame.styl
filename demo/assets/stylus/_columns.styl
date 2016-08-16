@@ -1,0 +1,13 @@
+#columns{
+    // [class*=demo]{
+    //     height: 100px;
+    // }
+
+    .demo1{
+        background-color: white;
+        +columns(7 right, "div", 12px space-between, 12px equal, 1 -1 1 3, 2 3 1){
+            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk2DbrPwAEXwJR259r2QAAAABJRU5ErkJggg==") , url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkKJv+HwADmQIOvUpybwAAAABJRU5ErkJggg==");
+            background-clip: content-box, padding-box;
+        }
+    }
+}

@@ -24,7 +24,7 @@ oneIn(list1,list2){
     return false;
 }
 
-column-space(mode,properties,index){
+column-space(mode,properties,index,interval,float){
     base-size = numIn(properties);
     if(oneIn(left right space-around, properties)){
         if(oneIn(left space-around, properties)){
@@ -35,13 +35,13 @@ column-space(mode,properties,index){
         }
     }
     else{
-        if(index == 1){
+        if((index == interval[0] && float == left) || (index == interval[1] && float == right)){
             if(equal in properties){
                 {mode}-left: base-size;
             }
             {mode}-right: (base-size/2);
         }
-        else if(index == cycle){
+        else if((index == interval[1] && float == left) || (index == interval[0] && float == right)){
             if(equal in properties){
                 {mode}-right: base-size;
             }
@@ -54,15 +54,15 @@ column-space(mode,properties,index){
     }
 }
 
-column-margin(properties,index){
-    column-space("margin",properties,index)
+column-margin(properties,index,interval,float = left){
+    column-space("margin",properties,index,interval,float)
 }
 
-column-padding(properties,index){
-    column-space("padding",properties,index)
+column-padding(properties,index,interval,float = left){
+    column-space("padding",properties,index,interval,float)
 }
 
-boxes-margin(size = 20px, template=space-around){
+boxes-margin(size = 20px, template=space-around, target){
     if(template in (space-around equal)){
         margin-left: size;
         margin-right: size;
@@ -87,9 +87,10 @@ boxes-margin(size = 20px, template=space-around){
     }
 }
 
-local-margin(properties,index){
+local-margin(properties,index,interval){
     base-size = numIn(properties);
-    if((index == 1 || index == cycle) && oneIn(equal space-between, properties)){
+
+    if((index == interval[0] || index == interval[1]) && oneIn(equal space-between, properties)){
         if(equal in properties){
             return 1.5*base-size;
         }

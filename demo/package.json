@@ -1,5 +1,5 @@
 {
-  "name": "frame.styl(demo)",
+  "name": "frame.styl_demo",
   "version": "0.0.1",
   "description": "Demonstrate the framework capabilities",
   "main": "gulpfile.js",

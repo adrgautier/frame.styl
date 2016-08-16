@@ -1,7 +1,7 @@
 /// Columns
 //===============================================
 
-columns(horizontal-properties, target = "*", margin-properties = none, padding-properties = none, width-properties = none, order = none){
+columns(horizontal-properties, target = "*", margin-properties = none, padding-properties = none,  width-properties = none, order = none){
     
     /// DEFINITIONS
 
@@ -10,25 +10,43 @@ columns(horizontal-properties, target = "*", margin-properties = none, padding-p
 
     //defining cycle
     cycle = 0;
+    cycle2 = 0;
+    weights = {};
     if(width-properties != none){
-        total-width = 0;
+        total-weight = 0;
+        if(right in horizontal-properties){
+            width-properties = reverse(width-properties);
+        }
         for width in width-properties{
-            total-width += width;
-            if(total-width <= col-number){
-                cycle+=1;
+            total-weight += abs(width);
+            if(total-weight <= col-number){
+                cycle2+=1;
+                if(width< 0){
+                    weights[""+ -(cycle)] = -(width);
+                    interval=(weights["0"]?0:1) cycle+1;
+                }
+                else{
+                    cycle+=1;
+                    weights[""+cycle] = width;
+                    interval=(weights["0"]?0:1) cycle;
+                }
             }
             else{
                 error("Total width greater than columns number !")
             }
         }
+        if(total-weight < col-number){
+            cycle2+= 1;
+            interval=(weights["0"]?0:1) (cycle+1);
+        }
     }
     else{
         cycle = col-number;
         for i in (1..cycle){
-            width-properties[(i - 1)] = 1;
+            weights[(i - 1)] = 1;
         }
     }
-
+    //error(weights);
     //defining nth mode
     nth = "nth-child"
     if(target != "*"){
@@ -36,21 +54,21 @@ columns(horizontal-properties, target = "*", margin-properties = none, padding-p
     }
 
     //defining total margin
-        if(margin-properties != none){
-            base-margin = numIn(margin-properties);
-            if(space-around in margin-properties){
-                total-margin = base-margin*2*cycle;
-            }
-            else if(space-between in margin-properties){
-                total-margin = base-margin*(cycle - 1);
-            }
-            else if(equal in margin-properties){
-                total-margin = base-margin*(cycle + 1);
-            }
-            else{
-                total-margin = base-margin*cycle;
-            }
+    if(margin-properties != none){
+        base-margin = numIn(margin-properties);
+        if(space-around in margin-properties){
+            total-margin = base-margin*2*cycle2;
         }
+        else if(space-between in margin-properties){
+            total-margin = base-margin*(cycle2 - 1);
+        }
+        else if(equal in margin-properties){
+            total-margin = base-margin*(cycle2 + 1);
+        }
+        else{
+            total-margin = base-margin*cycle2;
+        }
+    }
 
 
     //defining order
@@ -59,16 +77,23 @@ columns(horizontal-properties, target = "*", margin-properties = none, padding-p
             order[(i - 1)] = i;
         }
     }
-    if(right in horizontal-properties || reverse in horizontal-properties){
+    float = left;
+    if(right in horizontal-properties){
+        float = right;
+        order = reverse(order);
+        width-properties = reverse(width-properties)
+    }
+    if(reverse in horizontal-properties){
         order = reverse(order);
     }
+    
 
     /// CALCULATIONS
 
     &>{target}{
 
         position: relative;
-        float: left;
+        float: float;
 
         //setting original offset
         original-offset-px = 0;
@@ -78,48 +103,56 @@ columns(horizontal-properties, target = "*", margin-properties = none, padding-p
         for i in (1..cycle) {
             final-index = (index(order,i) + 1);
             &:{nth}({cycle}n+{i}){
-                if(final-index == 1){
-                    clear: left;
+                if(i == 1){
+                    clear: float;
                 }
             
                 //margin
                 if(margin-properties != none){
-                    column-margin(margin-properties,final-index); 
+                    column-margin(margin-properties,final-index,interval,float); 
                 }
 
                 //padding
                 if(padding-properties != none){
-                   column-padding(padding-properties,final-index);              
+                   column-padding(padding-properties,final-index,interval,float);              
                 }
                 
                 //getting final offset
                 final-offset-px = 0;
                 final-offset-weight = 0;
 
-                if(final-index>1){
-                    for f in (1..(final-index - 1)) {
-                        
-                        final-offset-weight += width-properties[(f - 1)];
-                        
 
+                for f in (0..(final-index - 1)) {
+                    if(f>0){
+                        
+                        final-offset-weight += weights[""+f];
                         if(margin-properties != none){
-                            final-offset-px += local-margin(margin-properties,f);    
-                            final-offset-px -= (total-margin/cycle);
+                            final-offset-px += local-margin(margin-properties,f,interval);    
+                            final-offset-px -= (total-margin/cycle2);
                         }
                     }
+                    //
+                    if(weights["-"+f] != null){
+                        final-offset-weight += weights["-"+f];
+                        if(margin-properties != none){
+                            final-offset-px += local-margin(margin-properties,-(f),interval);    
+                            final-offset-px -= (total-margin/cycle2);
+                        }
+                    }
+                    
                 }
 
-                left : "calc(%s + %s)" % (((final-offset-weight - original-offset-weight)*(100/col-number))% (final-offset-px - original-offset-px)px);
-                width : "calc(%s - %s)" % ((width-properties[(final-index - 1)]*(100/col-number))% (total-margin/cycle)px);
+                {float} : "calc(%s + %s)" % (((final-offset-weight - original-offset-weight)*(100/col-number))% (final-offset-px - original-offset-px)px);
+                width : "calc(%s - %s)" % ((weights[""+final-index]*(100/col-number))% (total-margin/cycle2)px);
 
             }
 
             //incrementing original offset
-            original-offset-weight += width-properties[(final-index - 1)];
+            original-offset-weight += weights[""+final-index];
 
             if(margin-properties != none){
-                original-offset-px += local-margin(margin-properties,final-index);
-                original-offset-px -= (total-margin/cycle);
+                original-offset-px += local-margin(margin-properties,final-index,interval);
+                original-offset-px -= (total-margin/cycle2);
             }
 
         }

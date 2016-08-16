@@ -1,0 +1,23 @@
+{
+  "name": "frame.styl_demo",
+  "description": "Demonstrate the framework capabilities",
+  "main": "gulpfile.js",
+  "authors": [
+    "Adrien Gautier"
+  ],
+  "license": "",
+  "homepage": "https://github.com/adrgautier/frame.styl",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "sanitize-css": "^4.1.0",
+    "prism": "^1.5.1"
+  }
+}
