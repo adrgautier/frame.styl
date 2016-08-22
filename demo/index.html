@@ -2,66 +2,137 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Structure page</title>
+    <title>Demo / Documentation</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.6.2/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,200,600,700,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,600">
+    <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
     <main>
+        <h1>FRAME <span>.styl</span></h1>
+        <section id="container">
+            <h2><a href="#container"></a>Container</h2>
+            <p>
+                The container function aims to set the first-level horizontal constraint.
+                This translates into a maximum width (generaly <code>960px</code>) that the content must not exceed.
+                Because this is the first-level contraint, this function should be used on first-level elements <span class="language-html">(i.e. : <code>&lt;main&gt;</code>, <code>&lt;header&gt;</code>, <code>&lt;footer&gt;</code>)</span>.
+            </p>
+            <pre><code class="language-stylus">container(1080px, 32px, 800px, 32px) //used on &lt;main&gt;</code></pre>
+            <pre><code class="language-stylus">container(none, 0, 800px, 64px) //used on &lt;footer&gt;</code></pre>
+            <p>The code above is used on this demo page. As you can see, the function is used with 4 parameters.</p>
+            <p>The first parameter aims to define the max width of the container.</p>
+            <p>The second parameter defines the minimum margin on each side of the container. Above a specific window width, the margin is set to the given number.</p>
+            <p>The third parameter defines the maximum "inner width". By inner, I mean the width remaing after the padding been applied.</p>
+            <p>Similar to the second parameter, the fourth parameter defines a minimum padding.</p>
+            <h4>Extra parameters :</h4>
+            <p>The fifth parameter defines the alignment of the "outer container" relatively to the window.</p>
+            <p>The sixth parameter defines the alignment of the "inner container" relatively to the "outer container".</p>            
+        </section>
         <section id="columns">
-            <h1>Columns</h1>
-            <h2>Test</h2>
-<pre><code class="language-stylus">+columns(7 right, "*", 12 space-between, 12 equal, 2 -1 2 1){
-    background-color: blue;
-}</code></pre>
-            <div class="columns-area demo1">
+            <h2><a href="#columns"></a>Columns</h2>
+            <p>
+                The columns function allows to define complexe columns pattern.
+                In contrary to bootstrap's grid you are not limited to 12 columns.
+                Most of the concept comes from <a href="http://neutroncss.com">NeutronCSS</a> built on SASS, with some additions :
+                    <ul>
+                        <li>columns width</li>
+                        <li>order and alignment</li>
+                        <li>blank/empty columns, similar to the offset in bootstrap</li>
+                        <li><code>margin</code> and <code>padding</code> patterns</li>
+                    </ul>
+            </p>
+            <h3>Summary</h3>
+            <p>Here is how to read the code following :</p>
+            <pre><code class="language-stylus">columns(7 right, "div", 12px space-between, 12px equal, 1 -1 1 3, 2 3 1)</code></pre>
+            <p>Grid made of <b>7</b> columns aligned to the <b>right</b>.</p>
+            <p>Targeted tag is <b>div</b>.</p>
+            <p>There is a <b>12px space between</b> each columns.</p>
+            <p>The content is padded by <b>12px</b> with the <b>equal</b> pattern.</p>
+            <p>The columns pattern is : one column of weight <b>1</b>, one blank column of weight <b>1</b>, another column of weight <b>1</b> and a last columns of weight <b>3</b>.</p>
+            <p>The column order from left to right is : <b>second</b>, <b>third</b> then <b>first</b>. This pattern is repeted every 3 div.</p>
+            <div class="area demo1">
                 <div class="col1">col1 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id eveniet doloremque voluptatem cupiditate ut nam a maxime nesciunt, obcaecati reprehenderit suscipit nostrum? Itaque optio consequatur ut, beatae, iusto accusamus ratione.</div>
                 <div class="col2">col2</div>
                 <div class="col3">col3</div>
                 <div class="col4">col4</div>
                 <div class="col5">col5</div>
             </div>
+            <div class="important">
+                <h4>Note :</h4>
+                <p>You may have noticed that the total weight of the pattern is <b>6</b> and don't match the grid made of <b>7</b> columns. Because the alignment is to the <b>right</b>, it will leave an empty column on the left. With a left alignment the column would be on the right.</p>
+                <p>The total weight can be bellow the column number of the grid.<br><b>TODO:</b> pattern on multiple row allowing to exceed the the column number.</p>
+                <p>The order must match the pattern (same number of column excluding blank columns)</p>
+            </div>
 
         </section>
         <section id="boxes">
-            <h1>Boxes</h1>
-            <p>The concept of boxes stand on css flex-boxes. In contrary to columns, boxes adapts depending on their content.</p>
-            <h2>Align left</h2>
-            <div class="boxes-area demo1">
+            <h2><a href="#boxes"></a>Boxes</h2>
+            <p>
+                The concept of boxes stand on css <em>flex-box</em>.
+                In contrary to columns, boxes width and position adapts depending on their <strong>content</strong> and their <strong>number</strong>.
+                Therefore, if these two parameters are not known in advance, the <code>boxes()</code> function may be more suitable than <code>columns()</code>.
+            </p>
+            <h3>Default</h3>
+            <pre><code class="language-stylus">boxes()</code></pre>
+            <div class="area demo1">
+                <div class="box1">The first box</div>
+                <div class="box2">A box</div>
+                <div class="box3">A box</div>
+                <div class="box4">An other box</div>
+                <div class="box5">The last box</div>
+            </div>
+            <h3>Horizontal properties</h3>
+            <p>You can control the alignment using the following arguments: <code>top</code>, <code>center</code>, <code>bottom</code>, <code>stretch</code> <code>space-around</code> and <code>space-between</code>.</p>
+            <p>You can also reverse the wrapping direction using <code>reverse</code>.</p>
+            <pre><code class="language-stylus">+boxes(stretch reverse, single center){
+    boxes-margin(12px, space-around);
+}</code></pre>
+            <div class="area demo2">
+                <div class="box1">The first box</div>
+                <div class="box2">A very very very very very very very very very very very very very very long box</div>
+                <div class="box3">A box</div>
+                <div class="box4">An other box</div>
+                <div class="box5">The last box</div>
+            </div>
+            <pre><code class="language-stylus">+boxes(shrink stretch, single bottom){
+    boxes-margin(12px, equal);
+}</code></pre>
+            <div class="area demo2-1">
+                <div class="box1">The first box</div>
+                <div class="box2">A very very very very very very very very very very very very very very long box</div>
+                <div class="box3">A box</div>
+                <div class="box4">An other box</div>
+                <div class="box5">The last box</div>
+            </div>
+            <h3>Target and min width</h3>
+            <p>Like columns, you can define witch tag is targeted.</p>
+
+            <pre><code class="language-stylus">height: 300px;
++boxes(right, bottom, "div", 40%){
+    margin: 6px 12px;
+}</code></pre>
+            <div class="area demo3">
                 <div class="box1">box1</div>
                 <div class="box2">box2</div>
                 <div class="box3">box3</div>
                 <div class="box4">box4</div>
                 <div class="box5">box5</div>
             </div>
-            <h2>Reverse</h2>
-            <div class="boxes-area demo2">
-                <div class="box1">box1</div>
-                <div class="box2">box2</div>
-                <div class="box3">box3</div>
-                <div class="box4">box4</div>
-                <div class="box5">box5</div>
+            <h3>Vertical properties</h3>
+            <p>By default, boxes wraps on multiple lines. Like for the horizontal axis, you can reverse the wrapping direction using <code>reverse</code>. You can disable wrapping using <code>single</code>.</p>
+            <p>Like for the horizontal axis, you can control the alignment using the following arguments: <code>top</code>, <code>center</code> and <code>bottom</code>.<br>When wrapping is enabled : <code>space-around</code>, <code>space-between</code> and <code>stretch</code>.</p>
+            <pre><code class="language-stylus">height: 300px;
+boxes(space-between, space-around reverse, "div", 40%)</code></pre>
+            <div class="important">
+                <h4>Note:</h4>
+                <p>By default, boxes are stretched on their line.<br>
+Using <code>single</code>, because there is only one line, you control the boxes alignment on the line (overwriting the stretching behavior).<br>
+But when line wrap is enabled, you control the lines alignment in the container. Therefore boxes will have the same size on their line.</p>
+                <p>Using the <code>boxes-margin()</code> function is only revelant on <code>single</code> line mode, with horizontal <code>shrink</code> enabled.</p>
             </div>
-            <h2>Min margin (center)</h2>
-            <div class="boxes-area demo3">
-                <div class="box1">box1</div>
-                <div class="box2">box2</div>
-                <div class="box3">box3</div>
-                <div class="box4">box4</div>
-                <div class="box5">box5</div>
-            </div>
-            <h2>Min width</h2>
-            <div class="boxes-area demo4">
-                <div class="box1">box1</div>
-                <div class="box2">box2</div>
-                <div class="box3">box3</div>
-                <div class="box4">box4</div>
-                <div class="box5">box5</div>
-            </div>
-            <h2>Stretch + line-wrap</h2>
-            <div class="boxes-area demo5">
+            <div class="area demo4">
                 <div class="box1">box1</div>
                 <div class="box2">box2</div>
                 <div class="box3">box3</div>
@@ -70,7 +141,9 @@
             </div>
         </section>
     </main>
+    <footer>Work in progress ...</footer>
     <!-- Scripts-->
     <script src="vendor/prism/prism.js"></script>
-    <script src="vendor/prism/components/prism-stylus.js"></script>    
+    <script src="vendor/prism/components/prism-stylus.js"></script>
+    <script src="vendor/prism/components/prism-html.js"></script>    
 </body>

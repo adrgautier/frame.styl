@@ -1,15 +1,41 @@
 #boxes{
     [class*=demo]{
-        height: 100px;
+        min-height: 100px;
+        &>div{
+            background: white_img , cyan_img;
+            background-clip: content-box, padding-box;
+            padding: 6px;
+            text-align: center;
+        }
     }
 
     .demo1{
-        background-color: white;
-        +boxes(shrink stretch, single, "div", 100px){
-            border: 1px solid black;
-            background-color: blue;
-            text-align: center;
-            vertical-margin(45px, equal);
+        boxes()
+    }
+
+    .demo2{
+        +boxes(stretch reverse, single center){
+            boxes-margin(12px, space-around);
         }
     }
+
+    .demo2-1{
+        +boxes(shrink stretch, single bottom){
+            boxes-margin(12px, equal);
+        }
+    }
+
+    .demo3{
+        height: 300px;
+        +boxes(right, bottom, "div", 40%){
+            margin: 6px 12px;
+        }
+    }
+
+    .demo4{
+        height: 300px;
+        boxes(space-between, space-around reverse, "div", 40%)
+    }
+
+
 }

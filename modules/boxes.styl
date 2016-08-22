@@ -2,6 +2,35 @@
 //===============================================
 
 boxes(horizontal-alignment = left, vertical-alignment = top, target = "*", min-width = none){
+    boxes-margin(size = 20px, template=space-around){
+        nth = "child";
+        if(target != "*"){
+            nth = "of-type";
+        }
+        if(template in (space-around equal)){
+            margin-left: size;
+            margin-right: size;
+        }
+        if(template in (space-between equal)){
+            if(reverse in horizontal-alignment){
+                &:not(:last-{nth}){
+                    margin-left: (size/2);
+                }
+                &:not(:first-{nth}){
+                    margin-right: (size/2);
+                }
+            }
+            else{
+                &:not(:first-{nth}){
+                    margin-left: (size/2);
+                }
+                &:not(:last-{nth}){
+                    margin-right: (size/2);
+                }
+            }
+        }
+    }
+
     display: flex;
 
     if(reverse in horizontal-alignment){
@@ -109,11 +138,11 @@ boxes(horizontal-alignment = left, vertical-alignment = top, target = "*", min-w
                     align-self: flex-end;
                 }
             }
-            else if(center in vertical-alignment){
-                align-self: center;
-            }
             else if(stretch in vertical-alignment){
                 align-self: stretch;
+            }
+            else{
+                align-self: center;
             }
         }
         {block}
