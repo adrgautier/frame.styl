@@ -1,9 +1,10 @@
 var gulp        = require('gulp');
 var browserSync = require('browser-sync').create();
+var plumber = require('gulp-plumber');
 
 var stylus = require('gulp-stylus');
-var plumber = require('gulp-plumber');
 var pleeease = require('gulp-pleeease');
+var inlinesource = require('gulp-inline-source');
 
 // set minifier to false to keep Sass sourcemaps support
 var PleeeaseOptions = {
@@ -32,6 +33,13 @@ gulp.task('stylus', function() {
         .pipe(pleeease(PleeeaseOptions))
         .pipe(gulp.dest("assets/css"))
         .pipe(browserSync.stream());
+});
+ 
+// Compile github html pages
+gulp.task('gh-pages', ['stylus'], function () {
+    return gulp.src('./*.html')
+        .pipe(inlinesource())
+        .pipe(gulp.dest('../'));
 });
 
 gulp.task('default', ['serve']);
