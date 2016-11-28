@@ -1,94 +1,121 @@
+container-margin(margin){
+    margin-left: margin;
+    margin-right: margin;    
+}
+container-padding(padding){
+    padding-left: padding;
+    padding-right: padding;
+}
 
-container(max-container-width = 960px, min-margin = 32px, max-content-width = 800px, min-padding = 16px, outer-alignment = center, inner-alignment = center){
-    container-widths(max-container-width = 1080px, max-content-width = 960px, outer-alignment = center, inner-alignment = center){
-        if (max-container-width != none){
-            max-width: max-container-width;
-            if (outer-alignment == center){
-                container-margin(auto);
-            }
-            else if (outer-alignment == left){
-                margin-left: min-margin;
-                margin-right: auto;
-            }
-            else{
-                margin-left: auto;
-            }
-            if (max-content-width != none){
-                if (inner-alignment == center){
-                    container-padding(max-container-width/2 - max-content-width/2);
+container(
+    max-container-width = settings.defaults.max-container-width,
+    min-margin = settings.defaults.min-margin,
+    max-content-width = settings.defaults.max-content-width,
+    min-padding = settings.defaults.min-padding,
+    outer-alignment = settings.defaults.outer-alignment,
+    inner-alignment = settings.defaults.inner-alignment){
+    width: auto;
+    if (breakpoint-value(max-container-width) != none) {
+        max-width: breakpoint-value(max-container-width);    
+    }
+    container-margin(breakpoint-value(min-margin));
+    container-padding(breakpoint-value(min-padding));
+    
+    if(breakpoint-value(max-content-width) != none){
+        @media screen and (min-width: breakpoint-value(max-content-width) + (breakpoint-value(min-padding)*2) + (breakpoint-value(min-margin)*2)){
+                if (breakpoint-value(inner-alignment) == center){
+                    container-padding('calc(50vw - %s)' % (breakpoint-value(max-content-width) / 2 + breakpoint-value(min-margin)));
                 }
-                else if (inner-alignment == left){
-                    padding-right: 'calc(100vw - %s)' % (max-content-width + 2*min-margin + min-padding); 
-                    padding-left: min-padding;
+                else if (breakpoint-value(inner-alignment) == left){
+                    padding-right: 'calc(100vw - %s)' % (breakpoint-value(max-content-width) + 2 * breakpoint-value(min-margin) + breakpoint-value(min-padding));
                 }
                 else{
-                    padding-left: 'calc(100vw - %s)' % (max-content-width + 2*min-margin + min-padding); 
-                    padding-right: min-padding;       
+                    padding-left: 'calc(100vw - %s)' % (breakpoint-value(max-content-width) + 2 * breakpoint-value(min-margin) + breakpoint-value(min-padding));     
                 }
             }    
-        }
-        else if(max-content-width != none){
-            container-padding('calc(50vw - %s)' % (max-content-width / 2 + min-margin));
-        }
-        if (max-content-width  == none){
-            container-padding(min-padding);
+    
+        if (breakpoint-value(max-container-width) != none){
+            @media screen and (min-width: breakpoint-value(max-container-width) + (breakpoint-value(min-margin)*2)){
+                    if (breakpoint-value(inner-alignment) == center){
+                        container-padding(breakpoint-value(max-container-width) / 2 - breakpoint-value(max-content-width) / 2);
+                    }   
+                    else if (breakpoint-value(inner-alignment) == left){
+                        padding-right: breakpoint-value(max-container-width) - breakpoint-value(max-content-width) - breakpoint-value(min-padding);              
+                    }
+                    else{
+                        padding-left: breakpoint-value(max-container-width) - breakpoint-value(max-content-width) - breakpoint-value(min-padding);
+                        
+                    }
+            }
         }
     }
-    container-margin(margin){
-        margin-left: margin;
-        margin-right: margin;    
+    if (breakpoint-value(max-container-width) != none){
+            @media screen and (min-width: breakpoint-value(max-container-width) + (breakpoint-value(min-margin)*2)){
+                    if (breakpoint-value(outer-alignment) == center or breakpoint-value(outer-alignment) == left){
+                        margin-right: auto;
+                        
+                    }
+                    if (breakpoint-value(outer-alignment) == center or breakpoint-value(outer-alignment) == right){
+                        margin-left: auto;          
+                    }
+            }
     }
-    container-padding(padding){
-        padding-left: padding;
-        padding-right: padding;
+    //breakpoints for padding and margin
+
+    for bp in mq_list.to{
+        if (has-breakpoint(min-padding,bp)){
+            //error(bp)
+            +breakpoint('to-'+bp){
+                container-padding(breakpoint-value(min-padding,bp));
+            }
+        }
+
+        if (has-breakpoint(min-margin,bp)){
+            //error(bp)
+            +breakpoint('to-'+bp){
+                container-margin(breakpoint-value(min-margin,bp));
+            }
+        }
     }
 
-  width: auto;
-  if (max-container-width != none) {
-    max-width: max-container-width;    
-  }
-  container-margin(min-margin);
-  container-padding(min-padding);
-  
-  if(max-content-width != none){
-    @media screen and (min-width: max-content-width + (min-padding*2) + (min-margin*2)){
-            if (inner-alignment == center){
-                container-padding('calc(50vw - %s)' % (max-content-width / 2 + min-margin));
-            }
-            else if (inner-alignment == left){
-                padding-right: 'calc(100vw - %s)' % (max-content-width + 2 * min-margin + min-padding);
-            }
-            else{
-                padding-left: 'calc(100vw - %s)' % (max-content-width + 2 * min-margin + min-padding);     
-            }
-        }    
-  
-    if (max-container-width != none){
-        @media screen and (min-width: max-container-width + (min-margin*2)){
-                if (inner-alignment == center){
-                    container-padding(max-container-width / 2 - max-content-width / 2);
-                }   
-                else if (inner-alignment == left){
-                    padding-right: max-container-width - max-content-width - min-padding;              
+    //breakpoints for widths and alignments
+    for bp in mq_list.from{
+        if (has-breakpoint(max-container-width,bp) || has-breakpoint(max-content-width,bp) || has-breakpoint(outer-alignment,bp) || has-breakpoint(inner-alignment,bp)){
+            +breakpoint('from-'+bp){
+                if (breakpoint-value(max-container-width,bp) != none){
+                    max-width: breakpoint-value(max-container-width,bp);
+                    if (breakpoint-value(outer-alignment,bp) == center){
+                        container-margin(auto);
+                    }
+                    else if (breakpoint-value(outer-alignment,bp) == left){
+                        margin-left: breakpoint-value(min-margin);
+                        margin-right: auto;
+                    }
+                    else{
+                        margin-left: auto;
+                        margin-right: breakpoint-value(min-margin);
+                    }
+                    if (breakpoint-value(max-content-width,bp) != none){
+                        if (breakpoint-value(inner-alignment,bp) == center){
+                            container-padding(breakpoint-value(max-container-width,bp)/2 - breakpoint-value(max-content-width,bp)/2);
+                        }
+                        else if (breakpoint-value(inner-alignment,bp) == left){
+                            padding-right: 'calc(100vw - %s)' % (breakpoint-value(max-content-width,bp) + 2*breakpoint-value(min-margin) + breakpoint-value(min-padding)); 
+                            padding-left: breakpoint-value(min-padding);
+                        }
+                        else{
+                            padding-left: 'calc(100vw - %s)' % (breakpoint-value(max-content-width,bp) + 2*breakpoint-value(min-margin) + breakpoint-value(min-padding)); 
+                            padding-right: breakpoint-value(min-padding);
+                        }
+                    }
                 }
-                else{
-                    padding-left: max-container-width - max-content-width - min-padding;
-                    
+                else if(breakpoint-value(max-content-width,bp) != none){
+                    container-padding('calc(50vw - %s)' % (breakpoint-value(max-content-width,bp) / 2 + breakpoint-value(min-margin)));
                 }
+                if (breakpoint-value(max-content-width,bp)  == none){
+                    container-padding(breakpoint-value(min-padding));
+                }
+            }
         }
     }
-  }
-  if (max-container-width != none){
-        @media screen and (min-width: max-container-width + (min-margin*2)){
-                if (outer-alignment == center or outer-alignment == left){
-                    margin-right: auto;
-                    
-                }
-                if (outer-alignment == center or outer-alignment == right){
-                    margin-left: auto;          
-                }
-        }
-  }
-    
-  {block}
 }

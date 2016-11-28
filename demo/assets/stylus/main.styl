@@ -42,10 +42,22 @@ main{
     position: relative;
     display: block;
 	background-color: white;
-    container(1080px, 32px, 800px, 32px)
+
+    container(
+        (from 1080px) (desktop-lrg 1280px), 
+        (to 32px) (tablet 0), 
+        (from 800px) (desktop-mid 960px), 
+        (to 64px) (mobile 16px) (phablet 32px),
+        center)
+    
     padding-bottom: 2em;
     overflow: auto;
 }
+
+.test{
+    width: breakpoint-value(300px , phablet);
+}
+
 footer{
     position: relative;
     display: block;
