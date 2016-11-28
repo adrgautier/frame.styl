@@ -2,96 +2,150 @@
 //===============================================
 
 breakpoints = {
-	mobile-max : 		settings.breakpoints.mobile,
-	phablet-max : 		settings.breakpoints.phablet,
-	tablet-max : 		settings.breakpoints.tablet,
-	desktop-sml-max :	settings.breakpoints.desktop-sml,
-	desktop-mid-max :	settings.breakpoints.desktop-mid,
-	phablet-min : 		settings.breakpoints.mobile + 1,
-	tablet-min : 		settings.breakpoints.phablet + 1,
-	desktop-sml-min : 	settings.breakpoints.tablet + 1,
-	desktop-mid-min : 	settings.breakpoints.desktop-sml + 1,
-	desktop-lrg-min : 	settings.breakpoints.desktop-mid + 1
+    mobile-max : 		settings.breakpoints.mobile,
+    phablet-max : 		settings.breakpoints.phablet,
+    tablet-max : 		settings.breakpoints.tablet,
+    desktop-sml-max :	settings.breakpoints.desktop-sml,
+    desktop-mid-max :	settings.breakpoints.desktop-mid,
+    phablet-min : 		settings.breakpoints.mobile + 1,
+    tablet-min : 		settings.breakpoints.phablet + 1,
+    desktop-sml-min : 	settings.breakpoints.tablet + 1,
+    desktop-mid-min : 	settings.breakpoints.desktop-sml + 1,
+    desktop-lrg-min : 	settings.breakpoints.desktop-mid + 1
 }
 
 createMediaQuery(fromThisSize = "", uptoThisSize = ""){
-	query = "";
-	if (fromThisSize != "" or uptoThisSize != "") {
-		if (fromThisSize != "" and fromThisSize != 0)  {
-			query += "(min-width:%s)" % (fromThisSize);
-		}
-		if ( (fromThisSize != "" and fromThisSize != 0) and uptoThisSize != "") {
-			query += " and ";
-		}
-		if (uptoThisSize != "") {
-			query += "(max-width:%s)" % (uptoThisSize);
-		}
-		return unquote(query);
-	}
+    query = "";
+    if (fromThisSize != "" or uptoThisSize != "") {
+        if (fromThisSize != "" and fromThisSize != 0)  {
+            query += "(min-width:%s)" % (fromThisSize);
+        }
+        if ( (fromThisSize != "" and fromThisSize != 0) and uptoThisSize != "") {
+            query += " and ";
+        }
+        if (uptoThisSize != "") {
+            query += "(max-width:%s)" % (uptoThisSize);
+        }
+        return unquote(query);
+    }
 }
 
 mediaqueries = {
-	mobile : 			createMediaQuery(0, breakpoints.mobile-max),
-	phablet : 			createMediaQuery(breakpoints.phablet-min, breakpoints.phablet-max),
-	from-phablet : 		createMediaQuery(breakpoints.phablet-min),
-	to-phablet : 		createMediaQuery(0,breakpoints.phablet-max),	
-	tablet : 			createMediaQuery(breakpoints.tablet-min, breakpoints.tablet-max),
-	to-tablet : 		createMediaQuery(0,breakpoints.tablet-max),
-	from-tablet : 		createMediaQuery(breakpoints.tablet-min),
-	desktop-sml : 		createMediaQuery(breakpoints.desktop-sml-min, breakpoints.desktop-sml-max),
-	desktop : 			createMediaQuery(breakpoints.desktop-sml-min),
-	from-desktop : 		createMediaQuery(breakpoints.desktop-sml-min),
-	from-desktop-sml : 	createMediaQuery(breakpoints.desktop-sml-min),
-	to-desktop-sml : 	createMediaQuery(0,breakpoints.desktop-sml-max),	
-	desktop-mid : 		createMediaQuery(breakpoints.desktop-mid-min, breakpoints.desktop-mid-max),
-	from-desktop-mid : 	createMediaQuery(breakpoints.desktop-mid-min),
-	desktop-lrg : 		createMediaQuery(breakpoints.desktop-lrg-min),
-	from-desktop-lrg : 	createMediaQuery(breakpoints.desktop-lrg-min)
+    mobile : 			createMediaQuery(0, breakpoints.mobile-max),
+    to-mobile : 		createMediaQuery(0, breakpoints.mobile-max),
+    phablet : 			createMediaQuery(breakpoints.phablet-min, breakpoints.phablet-max),
+    from-phablet : 		createMediaQuery(breakpoints.phablet-min),
+    to-phablet : 		createMediaQuery(0,breakpoints.phablet-max),	
+    tablet : 			createMediaQuery(breakpoints.tablet-min, breakpoints.tablet-max),
+    to-tablet : 		createMediaQuery(0,breakpoints.tablet-max),
+    from-tablet : 		createMediaQuery(breakpoints.tablet-min),
+    desktop-sml : 		createMediaQuery(breakpoints.desktop-sml-min, breakpoints.desktop-sml-max),
+    desktop : 			createMediaQuery(breakpoints.desktop-sml-min),
+    from-desktop : 		createMediaQuery(breakpoints.desktop-sml-min),
+    from-desktop-sml : 	createMediaQuery(breakpoints.desktop-sml-min),
+    to-desktop-sml : 	createMediaQuery(0,breakpoints.desktop-sml-max),	
+    desktop-mid : 		createMediaQuery(breakpoints.desktop-mid-min, breakpoints.desktop-mid-max),
+    from-desktop-mid : 	createMediaQuery(breakpoints.desktop-mid-min),
+    desktop-lrg : 		createMediaQuery(breakpoints.desktop-lrg-min),
+    from-desktop-lrg : 	createMediaQuery(breakpoints.desktop-lrg-min)
 }
 
 
 breakpoint(breakpoint = "", resolution = "", media-type = "", media-feature = "") {
-	if (breakpoint != "" or resolution != "" or media-feature != "" or media-type) {
+    if (breakpoint != "" or resolution != "" or media-feature != "" or media-type) {
 
-		media = "";
+        media = "";
 
-		// Add breakpoint to media string
-		if (breakpoint != "") {
-			if (mediaqueries[breakpoint] != null) {
-				media += mediaqueries[breakpoint];
-			}
-		}
+        // Add breakpoint to media string
+        if (breakpoint != "") {
+            if (mediaqueries[breakpoint] != null) {
+                media += mediaqueries[breakpoint];
+            }
+        }
 
-		// Add dpi to media string
-		if (resolution != "") {
-			res-dpi = resolution * 96;
+        // Add dpi to media string
+        if (resolution != "") {
+            res-dpi = resolution * 96;
 
-			if (media != "") {
-				media += " and";
-			}
+            if (media != "") {
+                media += " and";
+            }
 
-			media += " all and (min-resolution: %sdpi) " % (res-dpi);
-		}
+            media += " all and (min-resolution: %sdpi) " % (res-dpi);
+        }
 
-		// Add additional supplied query types to media string
-		if (media-type != "") {
-			if (media != "") {
-				media += " and ";
-			}
+        // Add additional supplied query types to media string
+        if (media-type != "") {
+            if (media != "") {
+                media += " and ";
+            }
 
-			media += media-type;
-		}
-		
-		// Add additional supplied query features to media string
-		if (media-feature != "") {
-			if (media != "") {
-				media += " and ";
-			}
-			media += "all and (" + media-feature + ")";
-		}
+            media += media-type;
+        }
+        
+        // Add additional supplied query features to media string
+        if (media-feature != "") {
+            if (media != "") {
+                media += " and ";
+            }
+            media += "all and (" + media-feature + ")";
+        }
 
-		@media media {
-			{block}
-		}
-	}
+        @media media {
+            {block}
+        }
+    }
+}
+
+mq_list = {
+    from: mobile phablet tablet desktop-sml desktop-mid desktop-lrg,
+    to: desktop-lrg desktop-mid desktop-sml tablet phablet mobile
+} 
+
+breakpoint-value(hash,breakpoint=null){
+    if ((length(hash) == 2 && length(hash[0]) == 2) || length(hash) > 2){
+        //two pair or more
+        //(should have at least one breakpoint)
+        base = hash[0];
+        order = base[0];
+        value = base[1];
+        if(breakpoint != null){
+            for bp in mq_list[order] {
+                //fetch all possible breakpoints one by one
+                for pair in hash{
+                    //update value if breakpoint is in given hash
+                    if (pair[0] == bp) {
+                        value = pair[1];
+                    }
+                }
+                if(bp == breakpoint){
+                    //return value if given breakpoint is reached
+                    return value;
+                }
+            }
+        }
+        else{
+            return value;
+        }
+    }
+    else if (length(hash) == 2){
+        //only one pair
+        return hash[1];
+    }
+    else{
+        //not a pair
+        return hash;
+    }
+}
+
+has-breakpoint(hash,breakpoint){
+    if ((length(hash) == 2 && length(hash[0]) == 2) || length(hash) > 2){
+        //two pair or more
+        for pair in hash{
+            if (pair[0] == breakpoint) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
